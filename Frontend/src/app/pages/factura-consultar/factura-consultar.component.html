@@ -1,0 +1,70 @@
+<div>
+    <div class="mb-3">
+        <label for="textFacturaNumero" class="form-label">Factura número</label>
+        <input #textFacturaNumero type="text" class="form-control" id="textFacturaNumero" placeholder="factura número">
+    </div>
+</div>
+
+<div>
+    <button class="btn btn-primary" (click)="FacturaConsultar(textFacturaNumero)">
+        Consultar
+    </button>
+    &nbsp;
+    <button class="btn btn-primary" [routerLink]="['/factura-editar','0']">
+        Nueva factura
+    </button>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+        
+        </div>
+        <div class="col">
+        Factura número
+        </div>
+        <div class="col">
+        Fecha de expedición
+        </div>
+        <div class="col">
+        Identificación cliente
+        </div>
+        <div class="col">
+        Nombres cliente
+        </div>
+        <div class="col">
+        Apellidos cliente
+        </div>
+        <div class="col">
+        Valor total
+        </div>
+    </div>
+    <div *ngFor="let Factura of facturas" class="row">
+        <div class="col">
+            <button class="btn btn-primary" style="width: 70px;" [routerLink]="['/factura-editar',Factura.id]">
+                Editar
+            </button>
+            <button class="btn btn-primary" style="width: 70px;" (click)="FacturaEliminar(Factura.id)">
+                Eliminar
+            </button>
+        </div>
+        <div class="col">
+            {{Factura.numero}}
+        </div>
+        <div class="col">
+            {{Factura.fechaExpedicion | date :'dd/MM/yyyy'}}
+        </div>
+        <div class="col">
+            {{Factura.cliente.identificacion}}
+        </div>
+        <div class="col">
+            {{Factura.cliente.nombres}}
+        </div>
+        <div class="col">
+            {{Factura.cliente.apellidos}}
+        </div>
+        <div class="col">
+            {{Factura.valorTotal | currency}}
+        </div>
+    </div>
+</div>

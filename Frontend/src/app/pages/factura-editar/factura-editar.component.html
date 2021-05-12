@@ -1,0 +1,157 @@
+
+<form class="row g-3" [formGroup]="facturaDatos">
+    <div class="col-md-2">
+        <label for="comboTipoIdentificacion" class="form-label">Tipo de identificación</label>
+        <select id="comboTipoIdentificacion" class="form-select" formControlName="comboTipoIdentificacion">
+          <option *ngFor="let TipoIdentificacion of tiposIdentificacion" value= {{TipoIdentificacion.id}}>
+            {{TipoIdentificacion.nombre}}
+          </option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="textIdentificacion" class="form-label">Identificación</label>
+        <input type="text" class="form-control" id="textIdentificacion" formControlName="textIdentificacion" placeholder="identificación">
+    </div>
+    <div class="col-md-3">
+        <label for="inputNombres" class="form-label">Nombres</label>
+        <input type="text" [value]="factura.cliente.nombres" class="form-control" id="inputNombres" formControlName="textNombres" placeholder="nombres">
+    </div>
+    <div class="col-md-3">
+        <label for="inputApellidos" class="form-label">Apellidos</label>
+        <input type="text" [value]="factura.cliente.apellidos" class="form-control" id="inputApellidos" formControlName="textApellidos" placeholder="apellidos">
+    </div>
+    <div class="col-md-2">
+        <label for="inputFechaNacimiento" class="form-label">Fecha de nacimiento</label>
+        <input type="text" [value]="factura.cliente.fechaNacimiento | date:'shortDate'" class="form-control" id="inputFechaNacimiento"  formControlName="textFechaNacimiento" placeholder="dd/MM/yyyy">
+    </div>
+    <div class="col-md-6">
+        <label for="inputCorreo" class="form-label">Correo electrónico</label>
+        <input type="email" [value]="factura.cliente.correoElectronico" class="form-control" id="inputCorreo" formControlName="textCorreoElectronico">
+    </div>
+    
+    <div class="col-md-12">
+        <label for="inputValorTotal" class="form-label">Valor total</label>
+        <input type="label" [value]="factura.valorTotal" readonly="true" class="form-control" id="inputValorTotal">
+    </div>
+
+    <div class="col-md-12">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="ProductoAgregar()">
+            Agregar producto
+        </button>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+            Código
+            </div>
+            <div class="col">
+            Nombre
+            </div>
+            <div class="col">
+            Cantidad
+            </div>
+            <div class="col">
+            Precio unitario
+            </div>
+            <div class="col">
+            Subtotal
+            </div>
+        </div>
+        <div *ngFor="let FacturaDetalle of factura.listaFacturaDetalles" class="row">
+            <div class="col">
+                {{FacturaDetalle.producto.codigo}}
+            </div>
+            <div class="col">
+                {{FacturaDetalle.producto.nombre}}
+            </div>
+            <div class="col">
+                {{FacturaDetalle.cantidad}}
+            </div>
+            <div class="col">
+                {{FacturaDetalle.precioUnitario}}
+            </div>
+            <div class="col">
+                {{FacturaDetalle.subTotal}}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary" (click)="FacturaGuardar()">Guardar</button>
+        &nbsp;
+        <button type="submit" class="btn btn-primary" routerLink="/factura-consultar">Cancelar</button>
+      </div>
+</form>
+
+<!-- Button trigger modal -->
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Agregar producto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="col-md-6">
+                <label for="inputCodigoProducto" class="form-label">Código producto</label>
+                <input #inputCodigoProducto type="text" class="form-control" id="inputCodigoProducto">
+            </div>
+            <div class="col-md-6">
+                <label for="inputNombreProducto" class="form-label">Nombre producto</label>
+                <input #inputNombreProducto type="text" class="form-control" id="inputNombreProducto">
+            </div>
+            <div class="col-md-6">
+                <button type="button" class="btn btn-primary" (click)="ProductoConsultar(inputCodigoProducto, inputNombreProducto)">Consultar productos</button>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                    
+                    </div>
+                    <div class="col">
+                    Código
+                    </div>
+                    <div class="col">
+                    Nombre
+                    </div>
+                    <div class="col">
+                    Cantidad Inventario
+                    </div>
+                    <div class="col">
+                    Precio unitario
+                    </div>
+                </div>
+                <div *ngFor="let Producto of listaProductos" class="row">
+                    <div class="col">
+                        <button type="button" class="btn btn-primary" (click)="ProductoSeleccionar(Producto)">Seleccionar</button>
+                    </div>
+                    <div class="col">
+                        {{Producto.codigo}}
+                    </div>
+                    <div class="col">
+                        {{Producto.nombre}}
+                    </div>
+                    <div class="col">
+                        {{Producto.cantidadInventario}}
+                    </div>
+                    <div class="col">
+                        {{Producto.precioUnitario}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="inputCantidad" class="form-label">Cantidad</label>
+                <input #inputCantidad type="text" class="form-control" id="inputCantidad">
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="ProductoAceptar(inputCantidad)">Aceptar</button>
+          <button #closeModal type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
