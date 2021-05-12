@@ -245,7 +245,7 @@ namespace API.Facturacion.Servicios
 
                 if (dbFactura == null)
                 {
-                    throw new Exception("La factura indicada NO existe o no está activo.");
+                    throw new Exception("La factura indicada NO existe o no está activ.");
                 }
 
                 var factura = datosFacturaCrear.Factura;
@@ -282,7 +282,7 @@ namespace API.Facturacion.Servicios
                     dbFacturaDetalle.FechaCreacion = fechaActualizacion;
 
 
-                    var dbFacturaDetalleExistente = dbFactura.ListaFacturaDetalles.SingleOrDefault(a => a.Activo == true && a.Id != 0 && a.ProId == detalleProducto.Producto.Id);
+                    var dbFacturaDetalleExistente = dataContext.FacturaDetalle.SingleOrDefault(a => a.Activo == true && a.FacId == factura.Id && a.Id != 0 && a.ProId == detalleProducto.Producto.Id);
                     if (dbFacturaDetalleExistente != null)
                     {
                         dbFacturaDetalle = dbFacturaDetalleExistente;
@@ -295,7 +295,10 @@ namespace API.Facturacion.Servicios
                     dbFacturaDetalle.FechaActualizacion = fechaActualizacion;
                     dbFacturaDetalle.Activo = true;
 
-                    dbFactura.ListaFacturaDetalles.Add(dbFacturaDetalle);
+                    if (dbFacturaDetalle.Id == 0)
+                    {
+                        dbFactura.ListaFacturaDetalles.Add(dbFacturaDetalle);
+                    }
                 }
 
                 dataContext.SaveChanges();
@@ -356,8 +359,12 @@ namespace API.Facturacion.Servicios
             }
             else
             {
-                new ClienteServicio().ValidarCliente(factura.Cliente);
-
+                var respuesta = new ClienteServicio().ValidarCliente(factura.Cliente);
+                if (respuesta.Estado == EstadoPeticion.ERROR)
+                {
+                    error = true;
+                    mensajes.Add(respuesta.Mensaje);
+                }
             }
 
             if (factura.ListaFacturaDetalles == null || !factura.ListaFacturaDetalles.Any())

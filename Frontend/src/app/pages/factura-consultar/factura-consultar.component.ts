@@ -25,7 +25,7 @@ export class FacturaConsultarComponent implements OnInit {
   FacturaConsultaEjecutar(facturaNumero){
     this.facturaServicio.Consultar(facturaNumero).subscribe((data)=>{
       if (data['estado'] != 1){
-
+        alert(data["mensaje"]);
       }
       else
       {
@@ -39,7 +39,7 @@ export class FacturaConsultarComponent implements OnInit {
   {
     this.facturaServicio.Eliminar(facId).subscribe((data)=>{
       if (data['estado'] != 1){
-
+        alert(data["mensaje"]);
       }
       else
       {

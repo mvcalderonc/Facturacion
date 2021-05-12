@@ -41,7 +41,7 @@ export class FacturaEditarComponent implements OnInit {
     this.factura = new Factura();
     this.factura.id = 0;
     this.factura.numero = ''
-    this.factura.fechaExpedicion = null;//new Date();
+    this.factura.fechaExpedicion = new Date();
     this.factura.valorTotal= 0
     this.factura.cliente = new Cliente();
     this.factura.cliente.id = 0;
@@ -49,7 +49,7 @@ export class FacturaEditarComponent implements OnInit {
     this.factura.cliente.identificacion = '';
     this.factura.cliente.nombres = '';
     this.factura.cliente.apellidos = '';
-    this.factura.cliente.fechaNacimiento = null;//new Date();
+    this.factura.cliente.fechaNacimiento = new Date();
     this.factura.cliente.correoElectronico = '';
     this.factura.listaFacturaDetalles = [];
     
@@ -119,12 +119,12 @@ export class FacturaEditarComponent implements OnInit {
 
   FacturaGuardar()
   {
-    // this.factura.cliente.tidId = this.facturaDatos.value.comboTipoIdentificacion;
-    // this.factura.cliente.identificacion = this.facturaDatos.value.textIdentificacion;
-    // this.factura.cliente.nombres = this.facturaDatos.value.textNombres;
-    // this.factura.cliente.apellidos = this.facturaDatos.value.textApellidos;
+    this.factura.cliente.tidId = Number(this.facturaDatos.value.comboTipoIdentificacion);
+    this.factura.cliente.identificacion = this.facturaDatos.value.textIdentificacion;
+    this.factura.cliente.nombres = this.facturaDatos.value.textNombres;
+    this.factura.cliente.apellidos = this.facturaDatos.value.textApellidos;
     // this.factura.cliente.fechaNacimiento = this.facturaDatos.value.textFechaNacimiento;
-    // this.factura.cliente.correoElectronico = this.facturaDatos.value.textCorreoElectronico;
+    this.factura.cliente.correoElectronico = this.facturaDatos.value.textCorreoElectronico;
 
     const contenedor = {
       factura: {...this.factura}
@@ -135,10 +135,10 @@ export class FacturaEditarComponent implements OnInit {
       this.facturaServicio.Guardar(contenedor).subscribe((data)=>{
         if (data['estado'] != 1){
           console.log(data["mensaje"])
+          alert(data["mensaje"]);
         }
         else
         {
-          console.log("dasd");
           console.log(data["factura"]);
         }
       });
@@ -148,10 +148,10 @@ export class FacturaEditarComponent implements OnInit {
       this.facturaServicio.Actualizar(this.factura.id.toString(), contenedor).subscribe((data)=>{
         if (data['estado'] != 1){
           console.log(data["mensaje"])
+          alert(data["mensaje"]);
         }
         else
         {
-          console.log("dasd");
           console.log(data["factura"]);
         }
       });
@@ -159,11 +159,7 @@ export class FacturaEditarComponent implements OnInit {
   }
 
   ProductoAgregar(){
-    console.log(this.factura)
-    console.log(this.facturaDatos)
-
-    console.log(this.facturaDatos)
-
+    this.productoSeleccionado = null;
   }
 
   ProductoConsultar(codigo, nombre)
@@ -193,23 +189,28 @@ export class FacturaEditarComponent implements OnInit {
   @ViewChild('closeModal') private closeModal: ElementRef;
   ProductoAceptar(cantidad)
   {
-    console.log(this.factura)
-    console.log(this.factura.listaFacturaDetalles)
-    const unidades = cantidad.value
-    
-    const facturaDetalle = new FacturaDetalle();
-    facturaDetalle.producto = this.productoSeleccionado;
-    facturaDetalle.cantidad = unidades;
-    facturaDetalle.precioUnitario = this.productoSeleccionado.precioUnitario;
-    facturaDetalle.subTotal = facturaDetalle.precioUnitario * facturaDetalle.cantidad;
+    if(this.productoSeleccionado != null)
+    {
+      const unidades = cantidad.value
+      
+      const facturaDetalle = new FacturaDetalle();
+      facturaDetalle.producto = this.productoSeleccionado;
+      facturaDetalle.cantidad = Number(unidades);
+      facturaDetalle.precioUnitario = this.productoSeleccionado.precioUnitario;
+      facturaDetalle.subTotal = facturaDetalle.precioUnitario * facturaDetalle.cantidad;
 
-    this.factura.listaFacturaDetalles.push(facturaDetalle);
+      this.factura.listaFacturaDetalles.push(facturaDetalle);
 
-    var total = 0;
-    this.factura.listaFacturaDetalles.forEach(function (value) {
-      total = total + value.subTotal;
-    }); 
-    this.factura.valorTotal = total;
-    this.closeModal.nativeElement.click(); 
+      var total = 0;
+      this.factura.listaFacturaDetalles.forEach(function (value) {
+        total = total + value.subTotal;
+      }); 
+      this.factura.valorTotal = total;
+      this.closeModal.nativeElement.click(); 
+    }
+    else
+    {
+      alert("Debe seleccionar un producto");
+    }
   }
 }

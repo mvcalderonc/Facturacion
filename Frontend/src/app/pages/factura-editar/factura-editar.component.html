@@ -22,7 +22,7 @@
     </div>
     <div class="col-md-2">
         <label for="inputFechaNacimiento" class="form-label">Fecha de nacimiento</label>
-        <input type="text" [value]="factura.cliente.fechaNacimiento | date:'shortDate'" class="form-control" id="inputFechaNacimiento"  formControlName="textFechaNacimiento" placeholder="dd/MM/yyyy">
+        <input type="text" [value]="factura.cliente.fechaNacimiento | date:'dd/MM/yyyy'" data-inputmask="'alias': 'date'" class="form-control" id="inputFechaNacimiento"  formControlName="textFechaNacimiento" placeholder="dd/MM/yyyy">
     </div>
     <div class="col-md-6">
         <label for="inputCorreo" class="form-label">Correo electrónico</label>
